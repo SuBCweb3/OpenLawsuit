@@ -35,6 +35,62 @@ async function startServer() {
   app.use(express.urlencoded({ limit: "50mb", extended: true }));
   // OAuth callback under /api/oauth/callback
   registerOAuthRoutes(app);
+
+  // Audio upload endpoint for voice transcription
+  app.post("/api/upload-audio", async (req, res) => {
+    try {
+      const { storagePut } = await import("../storage");
+      const { nanoid } = await import("nanoid");
+      const chunks: Buffer[] = [];
+      req.on("data", (chunk: Buffer) => chunks.push(chunk));
+      req.on("end", async () => {
+        try {
+          const body = Buffer.concat(chunks);
+          // Parse multipart form data manually for audio file
+          const contentType = req.headers["content-type"] || "";
+          if (!contentType.includes("multipart/form-data")) {
+            res.status(400).json({ error: "Expected multipart/form-data" });
+            return;
+          }
+          const boundary = contentType.split("boundary=")[1];
+          if (!boundary) {
+            res.status(400).json({ error: "No boundary found" });
+            return;
+          }
+          // Find the file data between boundaries
+          const boundaryBuffer = Buffer.from(`--${boundary}`);
+          const parts = [];
+          let start = body.indexOf(boundaryBuffer);
+          while (start !== -1) {
+            const nextStart = body.indexOf(boundaryBuffer, start + boundaryBuffer.length);
+            if (nextStart !== -1) {
+              parts.push(body.subarray(start + boundaryBuffer.length, nextStart));
+            }
+            start = nextStart;
+          }
+          if (parts.length === 0) {
+            res.status(400).json({ error: "No file found" });
+            return;
+          }
+          const part = parts[0];
+          const headerEnd = part.indexOf(Buffer.from("\r\n\r\n"));
+          if (headerEnd === -1) {
+            res.status(400).json({ error: "Invalid part" });
+            return;
+          }
+          const fileData = part.subarray(headerEnd + 4, part.length - 2); // Remove trailing \r\n
+          const fileKey = `audio/${nanoid()}.webm`;
+          const { url } = await storagePut(fileKey, fileData, "audio/webm");
+          res.json({ url });
+        } catch (err: any) {
+          console.error("Upload error:", err);
+          res.status(500).json({ error: err.message });
+        }
+      });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  });
   // tRPC API
   app.use(
     "/api/trpc",

@@ -1,0 +1,6 @@
+Screenshot review:
+- Homepage renders correctly with "让法律维权不再困难" heading
+- Navigation shows: 起诉攻略, 法律知识库, 进入工作台 buttons
+- Clean professional design with deep blue accent color
+- No TypeScript errors, no LSP errors, dependencies OK
+- Server running on port 3000

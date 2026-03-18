@@ -21,15 +21,17 @@ import {
 } from "@/components/ui/sidebar";
 import { getLoginUrl } from "@/const";
 import { useIsMobile } from "@/hooks/useMobile";
-import { LayoutDashboard, LogOut, PanelLeft, Users } from "lucide-react";
+import { Briefcase, LogOut, PanelLeft, Brain, Bell, BookOpen, Scale } from "lucide-react";
 import { CSSProperties, useEffect, useRef, useState } from "react";
 import { useLocation } from "wouter";
 import { DashboardLayoutSkeleton } from './DashboardLayoutSkeleton';
 import { Button } from "./ui/button";
 
 const menuItems = [
-  { icon: LayoutDashboard, label: "Page 1", path: "/" },
-  { icon: Users, label: "Page 2", path: "/some-path" },
+  { icon: Briefcase, label: "我的案件", path: "/dashboard" },
+  { icon: Brain, label: "AI 法律咨询", path: "/ai-chat" },
+  { icon: Bell, label: "通知中心", path: "/notifications" },
+  { icon: BookOpen, label: "起诉攻略", path: "/guide" },
 ];
 
 const SIDEBAR_WIDTH_KEY = "sidebar-width";
@@ -62,10 +64,10 @@ export default function DashboardLayout({
         <div className="flex flex-col items-center gap-8 p-8 max-w-md w-full">
           <div className="flex flex-col items-center gap-6">
             <h1 className="text-2xl font-semibold tracking-tight text-center">
-              Sign in to continue
+              登录以继续
             </h1>
             <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Access to this dashboard requires authentication. Continue to launch the login flow.
+              访问工作台需要登录。点击下方按钮进行登录。
             </p>
           </div>
           <Button
@@ -75,7 +77,7 @@ export default function DashboardLayout({
             size="lg"
             className="w-full shadow-lg hover:shadow-xl transition-all"
           >
-            Sign in
+            登录
           </Button>
         </div>
       </div>
@@ -170,8 +172,9 @@ function DashboardLayoutContent({
               </button>
               {!isCollapsed ? (
                 <div className="flex items-center gap-2 min-w-0">
+                  <Scale className="h-4 w-4 text-sidebar-primary" />
                   <span className="font-semibold tracking-tight truncate">
-                    Navigation
+                    OpenLawsuit
                   </span>
                 </div>
               ) : null}
@@ -226,7 +229,7 @@ function DashboardLayoutContent({
                   className="cursor-pointer text-destructive focus:text-destructive"
                 >
                   <LogOut className="mr-2 h-4 w-4" />
-                  <span>Sign out</span>
+                  <span>退出登录</span>
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
