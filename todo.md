@@ -17,3 +17,4 @@
 - [x] AI 法律咨询聊天页面
 - [x] 通知中心页面
 - [x] 编写 Vitest 测试（15 tests passed）
+- [ ] 合并 OpenLawsuit-Guide 和 OpenLawsuit-App 为统一的 OpenLawsuit 仓库
