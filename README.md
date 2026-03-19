@@ -83,7 +83,6 @@ OpenLawsuit/
 | 数据库 | MySQL / TiDB |
 | AI | LLM 集成（文书生成、法律咨询、信息提取） |
 | 语音 | Whisper API（语音转文字） |
-| 认证 | Manus OAuth |
 
 ## 如何参与
 
